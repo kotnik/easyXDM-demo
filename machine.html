@@ -1,0 +1,30 @@
+<html>
+<head>
+  <script type="text/javascript" src="easyxdm/easyXDM.debug.js"></script>
+  <script type="text/javascript">
+  var rpc = new easyXDM.Rpc({},
+    {
+      // Here's what our machine does:
+      local: {
+        addition: function(first, second) {
+          return first + second;
+        },
+        substraction: function(first, second) {
+          return first - second;
+        },
+        multiplication: function(first, second) {
+          return first * second;
+        },
+        division: function(first, second) {
+          if (second != 0) {
+            return first / second;
+          }
+          return 0;
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<html>
+<head>
+  <title>Calculator</title>
+  <script type="text/javascript" src="easyxdm/easyXDM.debug.js"></script>
+  <script type="text/javascript">
+
+  var rpc = new easyXDM.Rpc(
+    {
+      remote: "./machine.html" // provider - our calculating machine
+    }, 
+    {
+      remote: {
+        // Here we stub all remote procedures
+        addition: {},
+        substraction: {},
+        multiplication: {},
+        division: {},
+      }
+    });
+
+  var sucessFN = function(result) {
+    document.calculator.ans.value = result;
+  };
+
+  var errorFN = function(errorObj) {
+    document.calculator.ans.value = 'error: machine.html failed';
+  };
+
+  function calculate(input) {
+    var oper = input.match(/\*|\+|\-|\//g);
+    if (oper == null || oper.length != 1) {
+      document.calculator.ans.value = 'error: bad input';
+    } else {
+      var first = 0;
+      var second = 0;
+      [first, second] = input.split(oper[0]);
+      switch (oper[0]) {
+        case '+':
+          rpc.addition(parseInt(first), parseInt(second), sucessFN, errorFN);
+          break;
+        case '-':
+          rpc.substraction(parseInt(first), parseInt(second), sucessFN, errorFN);
+          break;
+        case '*':
+          rpc.multiplication(parseInt(first), parseInt(second), sucessFN, errorFN);
+          break;
+        case '/':
+          rpc.division(parseInt(first), parseInt(second), sucessFN, errorFN);
+      }
+    }
+  };
+
+  </script>
+</head>
+<body>
+
+<h1>Calculator</h1>
+<p>Lets calculate! But please be gentle, this is playground and it can handle only two values (ie. 4+3).</p>
+
+<form name="calculator">
+<table border="4" cellpadding="1" bordercolor="#FFFFFF" bgcolor="#5F6B48" cellspacing="2" width="222">
+<tr><td><input type="text" size="20" length="20" value="" name="ans" style="background:beige;color:black;"></td></tr>
+</table>
+<table border="4" cellpadding="2" bordercolor="#FFFFFF" cellspacing="2" width="150" bgcolor="#5F6B48">
+<tr>
+<td align="center"><input type="button" value="  7  " name="seven" onClick="document.calculator.ans.value+='7'"></td>
+<td align="center"><input type="button" value="  8  " name="eight" onClick="document.calculator.ans.value+='8'"></td>
+<td align="center"><input type="button" value="  9  " name="nine" onClick="document.calculator.ans.value+='9'"></td>
+<td align="center"><input type="button" value="  /  " name="divide" onClick="document.calculator.ans.value+='/'"></td>
+</tr>
+<tr>
+<td align="center"><input type="button" value="  4  " name="four" onClick="document.calculator.ans.value+='4'"></td>
+<td align="center"><input type="button" value="  5  " name="five" onClick="document.calculator.ans.value+='5'"></td>
+<td align="center"><input type="button" value="  6  " name="six" onClick="document.calculator.ans.value+='6'"></td>
+<td align="center"><input type="button" value="  *  " name="multiply" onClick="document.calculator.ans.value+='*'"></td>
+</tr>
+<tr>
+<td align="center"><input type="button" value="  1  " name="one" onClick="document.calculator.ans.value+='1'"></td>
+<td align="center"><input type="button" value="  2  " name="two" onClick="document.calculator.ans.value+='2'"></td>
+<td align="center"><input type="button" value="  3  " name="three" onClick="document.calculator.ans.value+='3'"></td>
+<td align="center"><input type="button" value="  -  " name="subtract" onClick="document.calculator.ans.value+='-'"></td>
+</tr>
+<tr>
+<td align="center"><input type="button" value="  C  " name="clear" onClick="document.calculator.ans.value=''"></td>
+<td align="center"><input type="button" value="  0  " name="zero" onClick="document.calculator.ans.value+='0'"></td>
+<td align="center"><input type="button" value="  =  " name="equal" onClick="calculate(document.calculator.ans.value)"></td>
+<td align="center"><input type="button" value="  +  " name="add" onClick="document.calculator.ans.value+='+'"></td>
+</tr>
+</table>
+</form>
+
+<h2>Debugging info</h2>
+<div id="log" style="height:100px;border:1px dotted black;overflow:auto">
+
+</body>
+</html>
